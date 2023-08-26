@@ -8,9 +8,6 @@ export const useItems = () => {
   const [items, setItems] = useState<Row[]>([]);
   const [isDeleted, setIsDeleted] = useState(false);
   const getItems = useCallback(async () => {
-    if (!user) {
-      return;
-    }
     try {
       const data = await Service.getItems();
       setItems(data);
@@ -18,7 +15,7 @@ export const useItems = () => {
     } catch (e) {
       console.warn('Failed to get items!');
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     getItems();

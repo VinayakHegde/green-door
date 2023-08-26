@@ -5,7 +5,7 @@ const getGreendoor = async () => {
   const { rows } = await sql<any>`SELECT * FROM greendoor;`;
   return rows.sort((a, b) => (a.id > b.id) ? 1 : -1);
 }
-export async function GET() {
+export async function GET(req: any, res: any) {
   try {
     const greendoors = await getGreendoor();
     return NextResponse.json(greendoors, { status: 200 });

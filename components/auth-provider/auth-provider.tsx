@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from 'next/navigation';
 import { AuthContext } from "./auth-context";
-import { Cookie, SESSION_COOKIE_NAME } from "@/utils/cookie";
-
+import { Service } from "@/service";
 
 export const AuthProvider = ({
   children,
@@ -11,24 +10,24 @@ export const AuthProvider = ({
   children: React.ReactNode
 }) => {
   const currentPage = usePathname();
-
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (currentPage === '/login') {
       setUser(null);
-      Cookie.delete(SESSION_COOKIE_NAME);
+      Service.logout();
       return;
+    } else {
+      Service.getUser().then((user) => {
+        if (!user) router.push('/login');
+        setUser(user);
+      }).catch((error) => {
+        console.error(error);
+        setUser(null);
+        router.push('/login');
+      });
     }
-
-    const session = Cookie.get(SESSION_COOKIE_NAME);
-    if (!session?.value) {
-      router.push('/login');
-    }
-
-    const sessionUser = session?.value ? JSON.parse(decodeURIComponent(session.value)) : null;
-    setUser(sessionUser);
   }, [currentPage]);
   return (
     <AuthContext.Provider value={{ user, setUser }}>
