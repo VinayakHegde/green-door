@@ -1,4 +1,4 @@
-import { Button } from "./button";
+import { Button } from "../button";
 import { useAction } from "@/hooks";
 
 export const Item = ({ colour, id, make, name, setIsDeleted }: ItemProps) => {
